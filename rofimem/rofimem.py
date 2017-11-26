@@ -20,8 +20,17 @@ def read_json(filename):
 DEFAULT_DATA_DIR = os.path.join(os.environ['HOME'], '.config', 'rofimem')
 
 PARSER = argparse.ArgumentParser(description='')
-PARSER.add_argument('--config-dir', '-D', type=str, help='configuration file', default=DEFAULT_DATA_DIR)
-PARSER.add_argument('name', type=str, help='Set of options to use', default='default', nargs='?')
+PARSER.add_argument(
+    '--config-dir', '-D', type=str,
+    default=DEFAULT_DATA_DIR,
+    help='configuration file')
+PARSER.add_argument(
+    'name', type=str, default='default', nargs='?',
+    help='Set of options to use')
+PARSER.add_argument(
+    '--history', action='store_true', default=False,
+    help='Select from history')
+
 args = PARSER.parse_args()
 
 
@@ -55,14 +64,25 @@ def main():
     with with_data(os.path.join(args.config_dir, 'data.json')) as data:
         while True:
             data.setdefault('options', dict())
+            data.setdefault('history', dict())
             if args.name not in data['options']:
                 data['options'][args.name] = []
 
-            options = data['options'][args.name]
+            if args.name not in data['history']:
+                data['history'][args.name] = []
 
-            result = rofi_prompt('Input:', options + ['* new', '* edit', '* delete'])
+            options = data['options'][args.name]
+            history = data['history'][args.name]
+
+            if args.history:
+                result = rofi_prompt('Input:', reversed(history))
+            else:
+                result = rofi_prompt('Input:', ['* new', '* edit', '* delete', '* history'] + options)
+
+            if result == '* history':
+                result = rofi_prompt('Input (Control-enter for input):', reversed(history))
             if result == '* new':
-                new_entry = rofi_prompt('New entry:', [])
+                new_entry = rofi_prompt('New entry:', history)
                 options.append(new_entry.strip('\n'))
             elif result == '* edit':
                 edit = rofi_prompt('Item to edit', options)
@@ -73,5 +93,8 @@ def main():
                 removed = rofi_prompt('Item to edit', options)
                 options.remove(removed)
             else:
+                while result in history:
+                    history.remove(result)
+                history.append(result)
                 print(result)
                 break

@@ -23,4 +23,8 @@ rofimem
 
 # Select an item from a list called command
 rofimem command
+
+# Select a recent input when selecting things
+# from the command list
+rofimem --history command
 ```
