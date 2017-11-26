@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import argparse
 import contextlib
-# make code as python 3 compatible as possible
 
 import os
 import subprocess
