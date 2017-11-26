@@ -7,10 +7,12 @@ to maintain a manually chosen list of items.
 but has three new options `* new`, `* delete`, and `* edit`
 that can be used to respectively add, remove, and modify entries
 
+This projects is compatible with both Python2 and Python3.
+
 # Installation
 
 ```
-pip install 
+pip install git+https://github.com/talwrii/rofimem#egg=rofimem
 ```
 
 # Usage

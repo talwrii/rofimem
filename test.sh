@@ -15,3 +15,8 @@ rm -rf venv
 virtualenv -p python3 venv
 venv/bin/pip install .
 venv/bin/rofimem --help > /dev/null
+
+rm -rf venv
+virtualenv venv
+venv/bin/pip install git+https://github.com/talwrii/rofimem#egg=rofimem
+venv/bin/rofimem --help > /dev/null
